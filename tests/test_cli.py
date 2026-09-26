@@ -48,6 +48,14 @@ class TestComandos(unittest.TestCase):
         self.assertIn("-R$ 45,90", saida)
         self.assertNotIn("Pizza", saida)
 
+    def test_resumo_do_mes(self):
+        self.executar("receita", "3000", "Salário", "-c", "Salário", "-d", "05/09/2026")
+        self.executar("despesa", "1250.50", "Aluguel", "-c", "Moradia", "-d", "10/09/2026")
+        codigo, saida, _ = self.executar("resumo", "--mes", "09/2026")
+        self.assertEqual(codigo, 0)
+        self.assertIn("Resumo de 09/2026", saida)
+        self.assertIn("Moradia", saida)
+
     def test_valor_negativo_mostra_erro_e_nao_grava(self):
         codigo, _, erros = self.executar("despesa", "-10", "Estorno")
         self.assertEqual(codigo, 1)

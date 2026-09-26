@@ -12,6 +12,7 @@ from poupe_mais import __version__, armazenamento
 from poupe_mais.carteira import CATEGORIA_PADRAO, Carteira
 from poupe_mais.formatacao import formatar_data, formatar_moeda
 from poupe_mais.modelos import TipoLancamento
+from poupe_mais.relatorios import formatar_resumo, gerar_resumo
 
 ARQUIVO_PADRAO = "poupe_dados.json"
 
@@ -78,6 +79,12 @@ def _saldo(args: argparse.Namespace, carteira: Carteira) -> None:
     print(f"Saldo atual: {formatar_moeda(carteira.saldo())}")
 
 
+def _resumo(args: argparse.Namespace, carteira: Carteira) -> None:
+    hoje = date.today()
+    ano, mes = args.mes if args.mes else (hoje.year, hoje.month)
+    print(formatar_resumo(gerar_resumo(carteira, ano, mes)))
+
+
 def _tabela(cabecalho, linhas, alinhar_a_direita=frozenset()) -> str:
     larguras = [max(len(celula) for celula in coluna) for coluna in zip(cabecalho, *linhas)]
 
@@ -128,6 +135,10 @@ def criar_parser() -> argparse.ArgumentParser:
 
     saldo = comandos.add_parser("saldo", help="mostra o saldo atual")
     saldo.set_defaults(funcao=_saldo, altera_dados=False)
+
+    resumo = comandos.add_parser("resumo", help="mostra o resumo do mês por categoria")
+    resumo.add_argument("-m", "--mes", type=ler_mes, help="mês no formato MM/AAAA (padrão: mês atual)")
+    resumo.set_defaults(funcao=_resumo, altera_dados=False)
     return parser
 
 

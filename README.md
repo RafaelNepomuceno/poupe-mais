@@ -44,6 +44,9 @@ python -m poupe_mais despesa 1300 "Aluguel" -c Moradia -d 10/09/2026
 # consultar
 python -m poupe_mais listar --mes 09/2026
 python -m poupe_mais saldo
+
+# resumo do mês: receitas, despesas, saldo e gastos por categoria
+python -m poupe_mais resumo --mes 09/2026
 ```
 
 ## Como rodar os testes
@@ -63,6 +66,7 @@ poupe-mais/
 │   ├── modelos.py       entidades do domínio (Lancamento)
 │   ├── carteira.py      regras de negócio: lançamentos e saldo
 │   ├── armazenamento.py leitura e gravação dos dados em JSON
+│   ├── relatorios.py    resumo mensal por categoria
 │   └── formatacao.py    formatação de valores e datas no padrão brasileiro
 ├── tests/               testes automatizados
 ├── pyproject.toml       configuração e metadados do projeto
