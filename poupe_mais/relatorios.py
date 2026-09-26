@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 
 from poupe_mais.carteira import Carteira
-from poupe_mais.formatacao import formatar_moeda
+from poupe_mais.formatacao import formatar_moeda, formatar_percentual
 from poupe_mais.modelos import TipoLancamento
 
 
@@ -24,6 +24,19 @@ class ResumoMensal:
     @property
     def saldo(self) -> Decimal:
         return self.total_receitas - self.total_despesas
+
+    @property
+    def taxa_de_poupanca(self) -> Decimal | None:
+        """Percentual da receita que sobrou no mês (None se não houve receita)."""
+        if self.total_receitas == 0:
+            return None
+        return self.saldo * 100 / self.total_receitas
+
+    def percentual_das_despesas(self, valor: Decimal) -> Decimal:
+        """Quanto um valor representa no total de despesas do mês (0 a 100)."""
+        if self.total_despesas == 0:
+            return Decimal(0)
+        return valor * 100 / self.total_despesas
 
 
 def gerar_resumo(carteira: Carteira, ano: int, mes: int) -> ResumoMensal:
@@ -44,12 +57,18 @@ def gerar_resumo(carteira: Carteira, ano: int, mes: int) -> ResumoMensal:
 
 def formatar_resumo(resumo: ResumoMensal) -> str:
     """Monta o texto do resumo mensal para exibir no terminal."""
+    if resumo.taxa_de_poupanca is None:
+        taxa = "— (sem receitas no mês)"
+    else:
+        taxa = formatar_percentual(resumo.taxa_de_poupanca)
+
     linhas = [
         f"Resumo de {resumo.mes:02d}/{resumo.ano}",
         "",
         f"  Receitas  {formatar_moeda(resumo.total_receitas):>14}",
         f"  Despesas  {formatar_moeda(resumo.total_despesas):>14}",
         f"  Saldo     {formatar_moeda(resumo.saldo):>14}",
+        f"  Taxa de poupança: {taxa}",
         "",
     ]
     if not resumo.despesas_por_categoria:
@@ -59,5 +78,6 @@ def formatar_resumo(resumo: ResumoMensal) -> str:
     largura = max(len(nome) for nome, _ in resumo.despesas_por_categoria)
     linhas.append("Despesas por categoria")
     for nome, valor in resumo.despesas_por_categoria:
-        linhas.append(f"  {nome:<{largura}}  {formatar_moeda(valor):>14}")
+        percentual = formatar_percentual(resumo.percentual_das_despesas(valor))
+        linhas.append(f"  {nome:<{largura}}  {formatar_moeda(valor):>14}  {percentual:>6}")
     return "\n".join(linhas)

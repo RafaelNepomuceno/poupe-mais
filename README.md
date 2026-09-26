@@ -52,6 +52,26 @@ python -m poupe_mais meta depositar "Reserva de emergência" 1.500,00
 python -m poupe_mais meta listar
 ```
 
+Exemplo de resumo mensal, com o peso de cada categoria nas despesas e a taxa
+de poupança (quanto da receita sobrou):
+
+```text
+$ python -m poupe_mais resumo --mes 09/2026
+Resumo de 09/2026
+
+  Receitas     R$ 5.450,00
+  Despesas     R$ 3.277,75
+  Saldo        R$ 2.172,25
+  Taxa de poupança: 39,9%
+
+Despesas por categoria
+  Moradia         R$ 1.650,00   50,3%
+  Alimentação       R$ 922,80   28,2%
+  Transporte        R$ 298,70    9,1%
+  Contas            R$ 286,25    8,7%
+  Lazer             R$ 120,00    3,7%
+```
+
 ## Como rodar os testes
 
 ```bash
