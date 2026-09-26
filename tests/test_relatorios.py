@@ -46,6 +46,27 @@ class TestGerarResumo(unittest.TestCase):
         self.assertEqual(resumo.total_despesas, Decimal("0"))
         self.assertEqual(resumo.despesas_por_categoria, ())
 
+    def test_taxa_de_poupanca(self):
+        # sobraram R$ 1.000,00 de R$ 4.000,00 de receita
+        self.assertEqual(self.resumo.taxa_de_poupanca, Decimal("25"))
+
+    def test_percentual_de_cada_categoria_nas_despesas(self):
+        self.assertEqual(self.resumo.percentual_das_despesas(Decimal("1500.00")), Decimal("50"))
+        self.assertEqual(self.resumo.percentual_das_despesas(Decimal("750.00")), Decimal("25"))
+
+    def test_mes_sem_receitas_nao_calcula_taxa(self):
+        carteira = Carteira()
+        carteira.registrar(DESPESA, Decimal("80.00"), "Farmácia", "Saúde", date(2026, 9, 3))
+        resumo = gerar_resumo(carteira, 2026, 9)
+        self.assertIsNone(resumo.taxa_de_poupanca)
+        self.assertIn("Taxa de poupança: — (sem receitas no mês)", formatar_resumo(resumo))
+
+    def test_gastar_mais_do_que_ganhou_gera_taxa_negativa(self):
+        carteira = Carteira()
+        carteira.registrar(RECEITA, Decimal("1000.00"), "Salário", data=date(2026, 9, 5))
+        carteira.registrar(DESPESA, Decimal("1250.00"), "Conserto do carro", data=date(2026, 9, 9))
+        self.assertEqual(gerar_resumo(carteira, 2026, 9).taxa_de_poupanca, Decimal("-25"))
+
 
 class TestFormatarResumo(unittest.TestCase):
     def test_texto_do_resumo(self):
@@ -58,11 +79,12 @@ class TestFormatarResumo(unittest.TestCase):
                 "  Receitas     R$ 4.000,00",
                 "  Despesas     R$ 3.000,00",
                 "  Saldo        R$ 1.000,00",
+                "  Taxa de poupança: 25,0%",
                 "",
                 "Despesas por categoria",
-                "  Moradia         R$ 1.500,00",
-                "  Alimentação     R$ 1.000,00",
-                "  Transporte        R$ 500,00",
+                "  Moradia         R$ 1.500,00   50,0%",
+                "  Alimentação     R$ 1.000,00   33,3%",
+                "  Transporte        R$ 500,00   16,7%",
             ],
         )
 

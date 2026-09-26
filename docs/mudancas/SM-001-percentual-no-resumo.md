@@ -7,7 +7,7 @@
 | Versão de referência   | v1.0.0                                    |
 | Funcionalidade afetada | Resumo mensal (comando `resumo`)          |
 | Tipo de mudança        | Melhoria (evolutiva)                      |
-| Situação               | Aprovada — aguardando implementação       |
+| Situação               | Implementada — aguardando liberação       |
 
 ## O que será modificado
 
@@ -54,4 +54,31 @@ gera a versão **1.1.0**.
 
 ## Resultado
 
-_A preencher após a implementação._
+Implementada na branch `feature/sm-001-percentual-resumo`.
+
+O que foi feito:
+
+- `ResumoMensal` ganhou a propriedade `taxa_de_poupanca` e o método
+  `percentual_das_despesas`;
+- `formatar_resumo` passou a exibir a taxa de poupança e o percentual de cada
+  categoria;
+- foram criados 4 testes: taxa de poupança, percentuais, mês sem receitas e mês
+  em que se gastou mais do que se ganhou (taxa negativa).
+
+Arquivos alterados: `poupe_mais/relatorios.py`, `tests/test_relatorios.py`,
+`README.md` e este documento — os mesmos previstos na análise de impacto.
+`cli.py` não precisou ser alterado.
+
+Problemas encontrados:
+
+- Ao rodar os testes existentes logo após alterar o código, 1 dos 40 testes
+  falhou: `test_texto_do_resumo`, que conferia o texto exato do resumo da
+  v1.0.0. A falha era esperada (estava prevista na análise de impacto), porque
+  o formato do resumo mudou de propósito. O teste foi atualizado para o novo
+  formato.
+- Os outros 39 testes passaram sem nenhuma alteração, o que indica que
+  cadastro, metas e armazenamento não foram afetados.
+- Um arquivo de dados criado com a v1.0.0 foi lido normalmente pela nova
+  versão, já que o formato do JSON não mudou.
+
+Situação final: 44 testes, todos passando.
