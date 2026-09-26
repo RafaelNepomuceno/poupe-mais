@@ -7,7 +7,7 @@
 | Versão de referência   | v1.0.0                                    |
 | Funcionalidade afetada | Resumo mensal (comando `resumo`)          |
 | Tipo de mudança        | Melhoria (evolutiva)                      |
-| Situação               | Implementada — aguardando liberação       |
+| Situação               | Concluída — liberada na versão 1.1.0      |
 
 ## O que será modificado
 
@@ -54,7 +54,8 @@ gera a versão **1.1.0**.
 
 ## Resultado
 
-Implementada na branch `feature/sm-001-percentual-resumo`.
+Implementada na branch `feature/sm-001-percentual-resumo`, integrada à `main`
+por merge e liberada na versão 1.1.0 (tag `v1.1.0`).
 
 O que foi feito:
 

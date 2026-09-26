@@ -92,6 +92,7 @@ poupe-mais/
 │   ├── relatorios.py    resumo mensal por categoria
 │   └── formatacao.py    formatação de valores e datas no padrão brasileiro
 ├── tests/               testes automatizados
+├── docs/mudancas/       solicitações de mudança (o quê, por quê, impacto, resultado)
 ├── CHANGELOG.md         histórico das versões
 ├── pyproject.toml       configuração e metadados do projeto
 └── README.md
