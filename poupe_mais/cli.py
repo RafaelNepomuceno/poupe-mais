@@ -6,11 +6,10 @@ import argparse
 import os
 import sys
 from datetime import date, datetime
-from decimal import Decimal
 
 from poupe_mais import __version__, armazenamento
 from poupe_mais.carteira import CATEGORIA_PADRAO, Carteira
-from poupe_mais.formatacao import formatar_data, formatar_moeda
+from poupe_mais.formatacao import formatar_data, formatar_moeda, ler_valor
 from poupe_mais.modelos import TipoLancamento
 from poupe_mais.relatorios import formatar_resumo, gerar_resumo
 
@@ -42,7 +41,7 @@ def _registrar(args: argparse.Namespace, carteira: Carteira) -> None:
     tipo = TipoLancamento(args.comando)
     lancamento = carteira.registrar(
         tipo=tipo,
-        valor=Decimal(args.valor),
+        valor=ler_valor(args.valor),
         descricao=args.descricao,
         categoria=args.categoria,
         data=args.data,
@@ -119,7 +118,7 @@ def criar_parser() -> argparse.ArgumentParser:
 
     for tipo in TipoLancamento:
         registrar = comandos.add_parser(tipo.value, help=f"registra uma {tipo.value}")
-        registrar.add_argument("valor", help="valor em reais, ex.: 150.00")
+        registrar.add_argument("valor", help="valor em reais, ex.: 45,90 ou 1.234,56")
         registrar.add_argument("descricao", help='descrição, ex.: "Conta de luz"')
         registrar.add_argument(
             "-c", "--categoria", default=CATEGORIA_PADRAO, help="categoria (padrão: %(default)s)"

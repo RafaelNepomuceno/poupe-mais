@@ -56,6 +56,17 @@ class TestComandos(unittest.TestCase):
         self.assertIn("Resumo de 09/2026", saida)
         self.assertIn("Moradia", saida)
 
+    def test_aceita_valor_com_virgula(self):
+        codigo, saida, erros = self.executar("despesa", "45,90", "Almoço", "-d", "18/09/2026")
+        self.assertEqual((codigo, erros), (0, ""))
+        self.assertIn("R$ 45,90", saida)
+
+    def test_valor_invalido_mostra_erro_amigavel(self):
+        codigo, _, erros = self.executar("despesa", "quarenta", "Almoço")
+        self.assertEqual(codigo, 1)
+        self.assertIn("valor inválido", erros)
+        self.assertNotIn("Traceback", erros)
+
     def test_valor_negativo_mostra_erro_e_nao_grava(self):
         codigo, _, erros = self.executar("despesa", "-10", "Estorno")
         self.assertEqual(codigo, 1)

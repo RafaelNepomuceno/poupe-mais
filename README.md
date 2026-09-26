@@ -40,6 +40,7 @@ variável de ambiente `POUPE_ARQUIVO`.
 # registrar receitas e despesas (categoria e data são opcionais)
 python -m poupe_mais receita 4800 "Salário de setembro" -c Salário -d 05/09/2026
 python -m poupe_mais despesa 1300 "Aluguel" -c Moradia -d 10/09/2026
+python -m poupe_mais despesa 45,90 "Almoço" -c Alimentação   # vírgula ou ponto
 
 # consultar
 python -m poupe_mais listar --mes 09/2026
