@@ -30,6 +30,22 @@ Requisito: Python 3.10 ou superior. Não há dependências externas.
 python -m poupe_mais --help
 ```
 
+Os dados ficam no arquivo `poupe_dados.json`, na pasta onde o comando é
+executado. Para usar outro arquivo, informe `--arquivo caminho.json` ou defina a
+variável de ambiente `POUPE_ARQUIVO`.
+
+## Como usar
+
+```bash
+# registrar receitas e despesas (categoria e data são opcionais)
+python -m poupe_mais receita 4800 "Salário de setembro" -c Salário -d 05/09/2026
+python -m poupe_mais despesa 1300 "Aluguel" -c Moradia -d 10/09/2026
+
+# consultar
+python -m poupe_mais listar --mes 09/2026
+python -m poupe_mais saldo
+```
+
 ## Como rodar os testes
 
 ```bash
@@ -43,7 +59,11 @@ poupe-mais/
 ├── poupe_mais/          código-fonte do sistema
 │   ├── __init__.py      versão do sistema
 │   ├── __main__.py      ponto de entrada (python -m poupe_mais)
-│   └── cli.py           interface de linha de comando
+│   ├── cli.py           interface de linha de comando
+│   ├── modelos.py       entidades do domínio (Lancamento)
+│   ├── carteira.py      regras de negócio: lançamentos e saldo
+│   ├── armazenamento.py leitura e gravação dos dados em JSON
+│   └── formatacao.py    formatação de valores e datas no padrão brasileiro
 ├── tests/               testes automatizados
 ├── pyproject.toml       configuração e metadados do projeto
 └── README.md
