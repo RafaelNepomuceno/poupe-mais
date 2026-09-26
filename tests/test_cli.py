@@ -56,6 +56,15 @@ class TestComandos(unittest.TestCase):
         self.assertIn("Resumo de 09/2026", saida)
         self.assertIn("Moradia", saida)
 
+    def test_metas_de_economia(self):
+        self.executar("meta", "criar", "Reserva de emergência", "10.000,00")
+        codigo, saida, _ = self.executar("meta", "depositar", "Reserva de emergência", "1.500,00")
+        self.assertEqual(codigo, 0)
+        self.assertIn("15,0%", saida)
+        self.assertIn("Faltam R$ 8.500,00.", saida)
+        _, lista, _ = self.executar("meta", "listar")
+        self.assertIn("Reserva de emergência", lista)
+
     def test_aceita_valor_com_virgula(self):
         codigo, saida, erros = self.executar("despesa", "45,90", "Almoço", "-d", "18/09/2026")
         self.assertEqual((codigo, erros), (0, ""))

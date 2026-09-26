@@ -39,3 +39,14 @@ def formatar_moeda(valor: Decimal) -> str:
 def formatar_data(dia: date) -> str:
     """Formata uma data como DD/MM/AAAA."""
     return dia.strftime("%d/%m/%Y")
+
+
+def formatar_percentual(valor: Decimal) -> str:
+    """Formata um percentual com uma casa decimal: Decimal("15") -> "15,0%"."""
+    return f"{valor:.1f}".replace(".", ",") + "%"
+
+
+def barra_de_progresso(percentual: Decimal, tamanho: int = 20) -> str:
+    """Desenha uma barra de progresso em texto: [#####---------------]."""
+    cheios = int(percentual * tamanho / 100)
+    return "[" + "#" * cheios + "-" * (tamanho - cheios) + "]"

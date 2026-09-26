@@ -9,7 +9,13 @@ from datetime import date, datetime
 
 from poupe_mais import __version__, armazenamento
 from poupe_mais.carteira import CATEGORIA_PADRAO, Carteira
-from poupe_mais.formatacao import formatar_data, formatar_moeda, ler_valor
+from poupe_mais.formatacao import (
+    barra_de_progresso,
+    formatar_data,
+    formatar_moeda,
+    formatar_percentual,
+    ler_valor,
+)
 from poupe_mais.modelos import TipoLancamento
 from poupe_mais.relatorios import formatar_resumo, gerar_resumo
 
@@ -84,6 +90,39 @@ def _resumo(args: argparse.Namespace, carteira: Carteira) -> None:
     print(formatar_resumo(gerar_resumo(carteira, ano, mes)))
 
 
+def _meta_criar(args: argparse.Namespace, carteira: Carteira) -> None:
+    meta = carteira.criar_meta(args.nome, ler_valor(args.valor_alvo))
+    print(f"Meta criada: {meta.nome} — objetivo de {formatar_moeda(meta.valor_alvo)}")
+
+
+def _meta_depositar(args: argparse.Namespace, carteira: Carteira) -> None:
+    valor = ler_valor(args.valor)
+    meta = carteira.depositar_na_meta(args.nome, valor)
+    print(
+        f"{formatar_moeda(valor)} guardados em {meta.nome}: "
+        f"{formatar_moeda(meta.valor_guardado)} de {formatar_moeda(meta.valor_alvo)} "
+        f"({formatar_percentual(meta.percentual)})"
+    )
+    if meta.concluida:
+        print("Parabéns, meta concluída!")
+    else:
+        print(f"Faltam {formatar_moeda(meta.falta)}.")
+
+
+def _meta_listar(args: argparse.Namespace, carteira: Carteira) -> None:
+    metas = carteira.metas()
+    if not metas:
+        print("Nenhuma meta cadastrada.")
+        return
+    largura = max(len(meta.nome) for meta in metas)
+    for meta in metas:
+        print(
+            f"{meta.nome:<{largura}}  {barra_de_progresso(meta.percentual)} "
+            f"{formatar_percentual(meta.percentual):>6}  "
+            f"{formatar_moeda(meta.valor_guardado)} de {formatar_moeda(meta.valor_alvo)}"
+        )
+
+
 def _tabela(cabecalho, linhas, alinhar_a_direita=frozenset()) -> str:
     larguras = [max(len(celula) for celula in coluna) for coluna in zip(cabecalho, *linhas)]
 
@@ -138,6 +177,22 @@ def criar_parser() -> argparse.ArgumentParser:
     resumo = comandos.add_parser("resumo", help="mostra o resumo do mês por categoria")
     resumo.add_argument("-m", "--mes", type=ler_mes, help="mês no formato MM/AAAA (padrão: mês atual)")
     resumo.set_defaults(funcao=_resumo, altera_dados=False)
+
+    meta = comandos.add_parser("meta", help="cria e acompanha metas de economia")
+    acoes = meta.add_subparsers(dest="acao", title="ações", metavar="<ação>", required=True)
+
+    criar = acoes.add_parser("criar", help="cria uma meta")
+    criar.add_argument("nome", help='nome da meta, ex.: "Reserva de emergência"')
+    criar.add_argument("valor_alvo", help="quanto se quer juntar, ex.: 10.000,00")
+    criar.set_defaults(funcao=_meta_criar, altera_dados=True)
+
+    depositar = acoes.add_parser("depositar", help="registra um valor guardado para a meta")
+    depositar.add_argument("nome", help="nome da meta")
+    depositar.add_argument("valor", help="valor guardado, ex.: 250,00")
+    depositar.set_defaults(funcao=_meta_depositar, altera_dados=True)
+
+    listar_metas = acoes.add_parser("listar", help="mostra o progresso das metas")
+    listar_metas.set_defaults(funcao=_meta_listar, altera_dados=False)
     return parser
 
 

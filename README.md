@@ -48,6 +48,11 @@ python -m poupe_mais saldo
 
 # resumo do mês: receitas, despesas, saldo e gastos por categoria
 python -m poupe_mais resumo --mes 09/2026
+
+# metas de economia
+python -m poupe_mais meta criar "Reserva de emergência" 10.000,00
+python -m poupe_mais meta depositar "Reserva de emergência" 1.500,00
+python -m poupe_mais meta listar
 ```
 
 ## Como rodar os testes
@@ -64,8 +69,8 @@ poupe-mais/
 │   ├── __init__.py      versão do sistema
 │   ├── __main__.py      ponto de entrada (python -m poupe_mais)
 │   ├── cli.py           interface de linha de comando
-│   ├── modelos.py       entidades do domínio (Lancamento)
-│   ├── carteira.py      regras de negócio: lançamentos e saldo
+│   ├── modelos.py       entidades do domínio (Lancamento e Meta)
+│   ├── carteira.py      regras de negócio: lançamentos, saldo e metas
 │   ├── armazenamento.py leitura e gravação dos dados em JSON
 │   ├── relatorios.py    resumo mensal por categoria
 │   └── formatacao.py    formatação de valores e datas no padrão brasileiro
