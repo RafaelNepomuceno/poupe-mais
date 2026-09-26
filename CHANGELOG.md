@@ -1,7 +1,7 @@
 # Histórico de versões
 
 Todas as mudanças relevantes do Poupe+ são registradas neste arquivo.
-O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/)
+O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 e o projeto adota o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
 ## [1.1.0] - 2026-09-26
