@@ -6,9 +6,6 @@ O **Poupe+** é um sistema simples de controle financeiro pessoal. Ele registra
 receitas e despesas, mostra o saldo e ajuda a entender para onde o dinheiro vai
 a cada mês — o primeiro passo para conseguir poupar.
 
-> Projeto em desenvolvimento. O andamento pode ser acompanhado pelo histórico
-> de commits.
-
 ## Objetivo
 
 Oferecer uma ferramenta leve, sem dependências externas, para que uma pessoa
@@ -75,9 +72,18 @@ poupe-mais/
 │   ├── relatorios.py    resumo mensal por categoria
 │   └── formatacao.py    formatação de valores e datas no padrão brasileiro
 ├── tests/               testes automatizados
+├── CHANGELOG.md         histórico das versões
 ├── pyproject.toml       configuração e metadados do projeto
 └── README.md
 ```
+
+## Versões
+
+O projeto segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/)
+(MAJOR.MINOR.PATCH). Cada versão publicada é marcada com uma tag no Git
+(ex.: `v1.0.0`) e descrita no [CHANGELOG](CHANGELOG.md). As mensagens de
+commit seguem o padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/)
+(`feat`, `fix`, `docs`, `chore`...).
 
 ## Autor
 
